@@ -10,12 +10,18 @@ public class HibernateUtil {
 	private  static SessionFactory sessionFactory;
 	private  static  Session session;
 	static  {
+		
 		//创建configuration对象，读取hibernate.cfg.xml文件，完成初始化。
+		/*
 		Configuration configuration = new Configuration().configure();
 		StandardServiceRegistryBuilder ssRegistryBuilder= new StandardServiceRegistryBuilder()
 				.applySettings(configuration.getProperties());
 		StandardServiceRegistry standardServiceRegistry = ssRegistryBuilder.build();
 		sessionFactory=configuration.buildSessionFactory(standardServiceRegistry);
+		*/
+		Configuration configuration = new Configuration().configure();
+		sessionFactory = configuration.buildSessionFactory();
+		
 	}
 	//获取sessionfactory
 	public static SessionFactory getSessionFactory() {
