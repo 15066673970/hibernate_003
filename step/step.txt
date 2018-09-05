@@ -91,9 +91,87 @@
 
 
 ---3.一对多映射
+		分3个部分：单向的一对多关联	单向的多对一关联  inverse和cascade属性
+		首先是单向的一对多关联。
+			1，sql建表语句 student.sql，注意看在多的一方student表中有个字段是gid，作为外键去关联grade表中的id，使用关联外键来表示自己是多的一方。
+			2，新建实体类，Grade.java,Student.java,其中班级类是一的一方，学生类是多的一方，在一的一方中使用set集合的属性把多的一方加入进来。
+				private Set<Student> students=new HashSet<>();
+			3，student.hbm.xml正常配置。然后在一的一方grade.hbm.xml配置文件中需要进行特殊的配置。
+				<!-- 配置单向的一对多关联关系 -->
+					<set name="students" table="student">
+					<!-- 指定关联的外键列 -->
+					<key column="gid"></key>
+					<one-to-many class="com.jinan.www.entity.Student"/>
+				</set>
+			4，然后在hibernate的配置文件中使用mapping标签，把实体类的映射文件加入进来。
+				<mapping resource="com/jinan/www/entity/Grade.hbm.xml"/>
+				<mapping resource="com/jinan/www/entity/Student.hbm.xml"/>
+			5.最后编写测试类
+				Test.java 测试多的一方学生的增删改查操作。
+		其次是单向的多对一的关联。
+			1，sql建表语句student1.sql	
+				
 ---4.多对多映射
 ---5.注解
 ---6.缓存策略
 ---7.数据库连接池
 ---8.逆向工程，正向工程
 ---9.延迟加载。
+---10.主键的生成策略
+                generator标签用来设定主键生成策略，hibernate内置的几种主键生成策略
+                1.increment 适用于代理主键。由Hibernate自动以递增的方式生成主键，每次增量为1 ，会执行两个sql语句，先从表中查找出最大的id，然后加一，插入当前数据
+                2.identity  适用于代理主键。由底层数据库生成主键，依赖数据库的主键自增功能
+                3.sequence  适用于代理主键。由底层数据库的序列来生成主键，前提是数据库支持序列。（mysql不支持，oracle支持）
+                4.hilo      适用于代理主键。Hibernate根据hilo算法来自己生成主键。
+                5.native    适用于代理主键。根据底层数据库对自动生成主键的支持能力选择 identity|sequence|hilo
+                6.uuid      适用于代理主键。采用UUID算法生成主键。
+                7.assigned  适用于自然主键。由我们自己指定主键值。例如指定身份证号为主键值
+---11.hql语句。
+
+	 第一种方式  	HQL语言是面向对象的
+            Query query=session.createQuery("from User");
+
+
+
+			Query对象：   封装HQL语句的对象。
+			
+			        返回一个对象的方法 query.uniqueResult();
+			
+			        分页相关
+			        query.setFirstResult(index):从第几个取
+			        query.setMaxResults(count):指定取几行记录
+            第二种方式
+            Criteria c=session.createCriteria(User.class);
+            List<User> l=c.list();
+
+            第三种方式，使用原生sql语句进行查询
+            SQLQuery query=session.createSQLQuery("select * from user");
+            List l=query.list();
+            
+---12.hibernate处理事务并发问题
+			在Hibernate中设置事务的隔离级别。
+			<property name="hibernate.connection.isolation">2</property>
+			
+			隔离级别代号。
+			1：Read Uncommitted
+			2: Read Committed
+			4: Repeatable Read 
+			8: Serializable
+			
+---13.锁的基本原理
+
+		  为了避免各种并发问题，以保证数据的完整性和一致性，数据库系统采用锁来实现事务的隔离性。 
+	
+	    锁的类型
+	    -共享锁：用于读数据操作。允许其他事务同时读取资源，但不允许其它事务更新。
+	    -独占锁：用于修改数据的场合。它锁定的资源，其他事务不能读取也不能修改。 
+	
+	    锁的基本原理如下
+	        -当一个事务访问某种数据库资源时，如果执行select语句，必须先获得共享锁。
+	        如果执行update、insert、delete语句，必须先获得独占锁。
+	
+	        -当第二个事务也要访问相同的资源时，如果执行select语句，也必须获得共享锁。
+	        如果执行update、insert、delete语句，也必须先获得独占锁。
+	        此时根据锁的类型。来决定第二个事务是应该等待第一个事务完成，还是可以立即获得锁。
+	
+	    许多数据库系统都有自动管理锁的功能，能够根据事务执行的sql语句，自动为资源加上适当的锁。

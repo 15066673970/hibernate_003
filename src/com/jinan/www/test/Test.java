@@ -16,10 +16,10 @@ import com.jinan.www.util.HibernateUtil;
  */
 public class Test {
 	public static void main(String[] args) {
-//		add();
+		add();
 //		findStudentsByGrade();
 //		updateStudents();	
-		deleteStudents();
+//		deleteStudents();
 		
 		
 	}

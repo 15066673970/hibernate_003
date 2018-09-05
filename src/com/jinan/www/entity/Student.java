@@ -1,7 +1,9 @@
 package com.jinan.www.entity;
 
 import java.io.Serializable;
-
+/*
+ * Ñ§ÉúÀà
+ */
 public class Student implements Serializable {
 	
 	private int sid;

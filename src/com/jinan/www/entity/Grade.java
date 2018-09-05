@@ -1,9 +1,12 @@
 package com.jinan.www.entity;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-
-public class Grade {
+/*
+ * ∞‡º∂¿‡
+ */
+public class Grade   implements Serializable{
 	private int gid;
 	private String gname;
 	private String gdesc;
