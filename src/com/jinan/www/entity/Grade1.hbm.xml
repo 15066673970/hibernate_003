@@ -14,10 +14,11 @@
 			<column name="gdesc"></column>
 		</property>
 		<!-- 需要在一的一方配置one2many标签 -->
+		<!-- 配置单项的一对多关联关系，设置inverse属性为true，由多方维护关系 -->
 		<!-- 
-	 	<set name="student1s" table="student1" >
+	 	<set name="student1s" table="student1" inverse="true" cascade="save-update">
 	 		<key column="gid"></key>
-	 		<one-to-many class="com.jinan.www.entity.Student1" />
+	 		<one-to-many class="com.jinan.www.entity.Student1"  />
 	 	</set>
 	 	 -->
 	</class>

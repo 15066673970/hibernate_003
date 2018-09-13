@@ -52,6 +52,10 @@ public class Grade1 implements Serializable {
 		this.gname = gname;
 		this.gdesc = gdesc;
 	}
+	@Override
+	public String toString() {
+		return "Grade1 [gid=" + gid + ", gname=" + gname + ", gdesc=" + gdesc + "]";
+	}
 	
 	
 	

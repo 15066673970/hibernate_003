@@ -8,6 +8,7 @@ public class Student1 implements Serializable {
 		private String sname;
 		private String sex;
 		/*
+		 * 在多方定义一个一方的引用
 		 * 加上一个grade1的属性，就相当于增加了一个grade属性。
 		 */
 		private Grade1 grade1;
@@ -55,6 +56,10 @@ public class Student1 implements Serializable {
 			this.sid = sid;
 			this.sname = sname;
 			this.sex = sex;
+		}
+		@Override
+		public String toString() {
+			return "Student1 [sid=" + sid + ", sname=" + sname + ", sex=" + sex + ", grade1=" + grade1 + "]";
 		}
 		
 		

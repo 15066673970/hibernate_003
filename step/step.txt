@@ -91,11 +91,17 @@
 
 
 ---3.一对多映射
+		
+		问题：待测。就是不管是单向的多对一，还是一对多。我们始终操作的都是对学生的crud，班级的crud并没有测试。
+		
 		分3个部分：单向的一对多关联	单向的多对一关联  inverse和cascade属性
+		
 		首先是单向的一对多关联。
+		
 			1，sql建表语句 student.sql，注意看在多的一方student表中有个字段是gid，作为外键去关联grade表中的id，使用关联外键来表示自己是多的一方。
 			2，新建实体类，Grade.java,Student.java,其中班级类是一的一方，学生类是多的一方，在一的一方中使用set集合的属性把多的一方加入进来。
 				private Set<Student> students=new HashSet<>();
+			重点记忆的地方：
 			3，student.hbm.xml正常配置。然后在一的一方grade.hbm.xml配置文件中需要进行特殊的配置。
 				<!-- 配置单向的一对多关联关系 -->
 					<set name="students" table="student">
@@ -108,9 +114,39 @@
 				<mapping resource="com/jinan/www/entity/Student.hbm.xml"/>
 			5.最后编写测试类
 				Test.java 测试多的一方学生的增删改查操作。
+		
 		其次是单向的多对一的关联。
-			1，sql建表语句student1.sql	
-				
+		
+			1，sql建表语句student1.sql	，同之前建立的一样。
+			2，新建实体类，Grade1.java，Student1.java，其中班级类是一的一方，学生类是多的一方，既然是单向的多对一的关联，那么我们
+			并没有在一的一方加入student1的set集合，但是却在Student1中加入了Grade1属性。同时增加了getter、setter方法。构造方法。
+			
+			private Grade1 grade1;
+			
+			3，grade1.hbm。xml普通配置，不需要配置set属性，然后Student1.hmb。xml需要配置many2one标签。
+			
+			<!-- 配置多对一关联关系 -->
+			<many-to-one name="grade1" class="com.jinan.www.entity.Grade1" column="gid"></many-to-one>	
+		
+			4，然后在hibernate的配置文件中使用mapping标签，把实体类的映射文件加入进来。
+			<mapping resource="com/jinan/www/entity/Grade1.hbm.xml"/>
+			<mapping resource="com/jinan/www/entity/Student1.hbm.xml"/>	
+			5，测试。test1.java
+			
+		inverse和cascade属性，详见img
+			inverse属性用来设置关联关系由谁来控制。在一对多的关联关系中，默认是由一方来维护的，通过设置一方的inverser属性为true，
+			这样可以将关联关系的维护交由多方来维护，这样可以避免生成更多的维护的sql语句，能够提升性能。
+			cascade属性用来进行级联操作，当属性不为none时，hibernate会自动持久化关联的操作对象。也就是只需要session.save(grade),
+			那么grade关联的student1 ，student2，。。。也都会保存到数据库中，增删改查操作都会持久化。
+			取值：
+					all	对所有操作进行级联操作
+					save-update	执行保存和更新操作时进行级联操作
+					delete 	执行删除操作时进行级联操作
+					none	对所有操作不进行级联操作
+					
+		如果同时配置了单向的一对多，多对一，那么我们就完成了双向一对多或者叫双向多对一。那么我们既可以方便的由学生查找到对应的班级的信息，
+		也可以方便的由班级查找到其所包含学生的信息
+			
 ---4.多对多映射
 ---5.注解
 ---6.缓存策略
